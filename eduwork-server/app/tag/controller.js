@@ -1,0 +1,71 @@
+const Tag = require("./model");
+
+// POST
+const store = async (req, res, next) => {
+  try {
+    let payload = req.body;
+    let tag = new Tag(payload);
+    await tag.save();
+    return res.json(tag);
+  } catch (error) {
+    if (error && error.name === "ValidationError") {
+      return res.json({
+        error: 1,
+        message: error.message,
+        fields: error.errors,
+      });
+    }
+
+    next(error);
+  }
+};
+
+// PUT
+const update = async (req, res, next) => {
+  try {
+    let payload = req.body;
+    let tag = await Tag.findByIdAndUpdate(req.params.id, payload, {
+      new: true,
+      runValidators: true,
+    });
+    return res.json(tag);
+  } catch (error) {
+    if (error && error.name === "ValidationError") {
+      return res.json({
+        error: 1,
+        message: error.message,
+        fields: error.errors,
+      });
+    }
+
+    next(error);
+  }
+};
+
+// GET
+const index = async (req, res, next) => {
+  try {
+    let tag = await Tag.find();
+    return res.json(tag);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// delete
+const deleteData = async (req, res, next) => {
+  try {
+    let tag = await Tag.findByIdAndDelete(req.params.id);
+
+    return res.json(tag);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  store,
+  update,
+  index,
+  deleteData,
+};
