@@ -1,27 +1,29 @@
 const CartItem = require("../cart-item/model");
 const Product = require("../product/model");
 
+
 // PUT
 const update = async (req, res, next) => {
   try {
-    let { item } = req.body;
-    let productId = item.map((items) => items.product._id);
-    let product = await Product.find({ _id: { $in: productId } });
-    let cartItem = item.map((item) => {
-      let relatedProduct = product.find(
-        (product) => product._id.toString() === item.product._id
-      );
+    let item  = req.body;
+    const productId = item.map((items) => items.product._id);
+    const product = await Product.find({ _id: { $in: productId } });
+    const cartItem = item.map((items) => {
+      const relatedProduct = product.find(
+        (products) => products._id.toString() === items.product._id
+        );
       return {
         product: relatedProduct._id,
         price: relatedProduct.price,
         image_url: relatedProduct.image_url,
         name: relatedProduct.name,
         user: req.user._id,
-        qty: item.qty,
+        qty: items.qty,
       };
     });
 
     await CartItem.deleteMany({ user: req.user._id });
+
     await CartItem.bulkWrite(
       cartItem.map((item) => {
         return {

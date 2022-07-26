@@ -8,9 +8,7 @@ const { Types } = require("mongoose");
 const store = async (req, res, next) => {
   try {
     let { delivery_fee, delivery_address } = req.body;
-    let item = await (
-      await CartItem.find({ user: req.user._id })
-    ).populate("product");
+    let item = await CartItem.find({ user: req.user._id }).populate("product");
     if (!item) {
       return res.json({
         error: 1,
@@ -18,12 +16,13 @@ const store = async (req, res, next) => {
       });
     }
     let address = await DeliveryAddress.findById(delivery_address);
+
     let order = new Order({
       _id: new Types.ObjectId(),
       status: "waiting_payment",
       delivery_fee: delivery_fee,
       delivery_address: {
-        provinsi: address.provinsi,
+        provinsi: address.provinsi, 
         kabupaten: address.kabupaten,
         kecamatan: address.kecamatan,
         kelurahan: address.kelurahan,
@@ -31,14 +30,15 @@ const store = async (req, res, next) => {
       },
       user: req.user._id,
     });
+
     let orderItem = await OrderItem.insertMany(
       item.map((items) => ({
         ...items,
-        name: item.product.name,
+        name: items.product.name,
         qty: parseInt(items.qty),
-        price: parent(items.product.price),
+        price: parseInt(items.product.price),
         order: order._id,
-        product: item.product._id,
+        product: items.product._id,
       }))
     );
     orderItem.forEach((items) => order.order_item.push(items));

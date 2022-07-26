@@ -45,7 +45,7 @@ const login = async (req, res, next) => {
     if (err) return next(err);
 
     if (!user)
-      return res.json({
+      return res.status(400).json({
         error: 1,
         message: "Email or Password incorect",
       });
@@ -70,6 +70,7 @@ const logout = async (req, res, next) => {
     { $pull: { token: token } },
     { useFindAndModify: false }
   );
+
 
   if (!token || !user) {
     res.json({

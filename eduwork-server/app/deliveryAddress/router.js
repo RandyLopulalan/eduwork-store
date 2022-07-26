@@ -17,13 +17,11 @@ router.post(
 
 router.put(
   "/delivery-address/:id",
-  policy_check("update", "DeliveryAddress"),
   deliveryAddressController.update
 );
 
 router.delete(
   "/delivery-address/:id",
-  policy_check("delete", "DeliveryAddress"),
   deliveryAddressController.deleteData
 );
 

@@ -24,13 +24,10 @@ const orderSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  order_item: {
-    type: Schema.Types.ObjectId,
-    ref: "OrderItem",
-  },
+  order_item: [{ type: Schema.Types.ObjectId, ref: "OrderItem",}],
 },{timestamps: true});
 
-orderSchema.plugin(AutoIncrement, {inc_field: 'prder_number'})
+orderSchema.plugin(AutoIncrement, {inc_field: 'order_number'})
 orderSchema.virtual('item_count').get(function(){
   return this.order_item.reduce((total, item) => total + parseInt(item.qty), 0)
 })
@@ -41,7 +38,7 @@ orderSchema.post('save', async function(){
     order: this._id,
     sub_total: sub_total,
     delivery_fee: parseInt(this.delivery_fee),
-    total: parent(sub_total + this.delivery_fee),
+    total: parseInt(sub_total + this.delivery_fee),
     delivery_address: this.delivery_address
   })
   await invoice.save()

@@ -1,5 +1,17 @@
+const { subject } = require("@casl/ability");
 const { policyFor } = require("../../utils");
 const DeliveryAddress = require("./model");
+
+// GET
+const index = async (req, res, next) => {
+  try {
+    let address = await DeliveryAddress.find();
+
+    return res.json(address);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // POST
 const store = async (req, res, next) => {
@@ -54,17 +66,6 @@ const update = async (req, res, next) => {
       });
     }
 
-    next(error);
-  }
-};
-
-// GET
-const index = async (req, res, next) => {
-  try {
-    let address = await DeliveryAddress.find();
-
-    return res.json(address);
-  } catch (error) {
     next(error);
   }
 };

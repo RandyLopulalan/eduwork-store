@@ -40,7 +40,6 @@ function policy_check(action, subject) {
   return function(req, res, next) {
     let policy = policyFor(req.user)
     if(!policy.can(action, subject)){
-      console.log(policy);
       return res.json({
         error: 1,
         message: `You are not allowed to ${action} ${subject}`
