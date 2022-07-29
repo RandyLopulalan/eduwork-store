@@ -113,7 +113,7 @@ const update = async (req, res, next) => {
         name: { $in: payload.tag },
       });
       if (tag.length) {
-        payload = { ...payload, tag: tag.map((tags) => tags._id) };
+        payload = { ...payload, tag: tag.map(tags => tags._id)};
       } else {
         delete payload.tag;
       }
@@ -187,7 +187,7 @@ const update = async (req, res, next) => {
 // GET
 const index = async (req, res, next) => {
   try {
-    let { skip = 0, limit = 10, q = "", category = "", tag = [] } = req.query;
+    let { skip = 0, limit = 50, q = "", category = "", tag = [] } = req.query;
 
     let criteria = {};
 
@@ -213,7 +213,7 @@ const index = async (req, res, next) => {
 
     if (tag.length) {
       let tagResult = await Tag.find({ name: { $in: tag } });
-
+      console.log(tag);
       if (tagResult.length > 0) {
         criteria = {
           ...criteria,

@@ -4,13 +4,12 @@ const { model, Schema } = mongoose;
 const invoiceSchema = Schema(
   {
     sub_total: {
-      type: String,
-      enum: ["waiting_payment", "processing", "in_delivery", "delivered"],
-      default: "waiting_payment",
+      type: Number,
+      required: [true, 'sub_total harus di isi']
     },
     delivery_fee: {
       type: Number,
-      default: 0,
+      required: [true, 'delivery_fee harus di isi']
     },
     delivery_address: {
       provinsi: { type: String, require: [true, "Provinsi harus di isi"] },
@@ -23,7 +22,7 @@ const invoiceSchema = Schema(
       type: Number,
       required: [true, "Total harus di isi"],
     },
-    Payment_status: {
+    payment_status: {
       type: String,
       enum: ["waiting_payment", "paid"],
       default: "waiting_payment",

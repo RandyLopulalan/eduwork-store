@@ -5,6 +5,11 @@ const { policyFor } = require("../../utils/index");
 // GET
 const index = async (req, res, next) => {
   try {
+    let { order_id } = req.params;
+    let invoice = await Invoice.findOne({ order: order_id })
+      .populate("order")
+      .populate("user");
+
     let policy = policyFor(req.user);
     let subjectInvoice = subject("Invoice", {
       ...invoice,
@@ -16,11 +21,6 @@ const index = async (req, res, next) => {
         message: "anda tidak memiliki akses untuk melihat invoice ini",
       });
     }
-
-    let { order_id } = req.params;
-    let invoice = await Invoice.findOne({ order: order_id })
-      .populate("order")
-      .populate("user");
 
     return res.json(invoice);
   } catch (error) {

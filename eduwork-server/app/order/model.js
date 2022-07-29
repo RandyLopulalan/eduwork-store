@@ -31,6 +31,7 @@ orderSchema.plugin(AutoIncrement, {inc_field: 'order_number'})
 orderSchema.virtual('item_count').get(function(){
   return this.order_item.reduce((total, item) => total + parseInt(item.qty), 0)
 })
+
 orderSchema.post('save', async function(){
   let sub_total = this.order_item.reduce((total, item) => total += (item.price * item.qty), 0)
   let invoice = new Invoice({
