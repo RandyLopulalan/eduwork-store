@@ -63,7 +63,7 @@ const login = async (req, res, next) => {
 };
 
 const logout = async (req, res, next) => {
-  let token = getToken(req);
+  let token = getToken(req.body);
 
   let user = await User.findOneAndUpdate(
     { token: { $in: [token] } },
